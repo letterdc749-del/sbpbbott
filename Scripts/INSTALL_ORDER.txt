@@ -1,0 +1,56 @@
+=====================================
+ROBLOX STUDIO SCRIPT INSTALLATION ORDER
+=====================================
+
+Follow these steps in order to install all scripts:
+
+STEP 1: Create NameStore ModuleScript
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+→ Open Roblox Studio
+→ Go to: ServerStorage → RIGHT CLICK → "Insert Object" → ModuleScript
+→ Rename to: "NameStore"
+→ Copy entire content from: [1] NameStore.lua
+→ Paste into the script and save
+
+STEP 2: Create TagDisplayScript
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+→ Go to: ServerScriptService → RIGHT CLICK → "Insert Object" → Script
+→ Rename to: "TagDisplayScript"
+→ Copy entire content from: [2] TagDisplayScript.lua
+→ Paste into the script and save
+
+STEP 3: Create NameStoreUpdater
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+→ Go to: ServerScriptService → RIGHT CLICK → "Insert Object" → Script
+→ Rename to: "NameStoreUpdater"
+→ Copy entire content from: [3] NameStoreUpdater.lua
+→ Paste into the script and save
+
+STEP 4: Create NameStoreSyncScript
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+→ Go to: ServerScriptService → RIGHT CLICK → "Insert Object" → Script
+→ Rename to: "NameStoreSyncScript"
+→ Copy entire content from: [4] NameStoreSyncScript.lua
+→ Paste into the script and save
+
+STEP 5: Test
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+→ Play the game in Studio
+→ Check Output window for any errors
+→ Test with Discord bot: /setcustom <userid> <name>
+→ Verify custom names appear above player heads
+
+IMPORTANT NOTES:
+================
+• Do NOT modify any of these scripts
+• All scripts poll from: https://unawake-impart-trio.ngrok-free.dev
+• If your ngrok URL changes, update SERVER_URL in each script
+• Keep server.py and bot.py running at all times
+• Make sure the Flask server is accessible from your game
+
+TROUBLESHOOTING:
+================
+• No names appearing? Check if Flask server is running
+• Scripts won't run? Check Output window for errors
+• HTTP errors? Verify ngrok URL is correct and accessible
+• Permission errors? Make sure you're running as game creator/editor
