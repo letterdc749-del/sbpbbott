@@ -8,6 +8,7 @@ app = Flask(__name__)
 QUEUE_FILE = "queue.json"
 DATA_FILE = "namestore_data.json"
 LUA_FILE = "NameStore.lua"
+SPAWNERS_FILE = "spawners_data.json"
 SECRET = os.getenv("SERVER_SECRET", "changeme123")
 
 plugin_commands = {}
@@ -117,6 +118,58 @@ def apply_to_data(entry):
 
     save_data(data)
     regenerate_lua(data)
+
+
+# ---------------- SPAWNERS ----------------
+# spawners_data.json shape:
+# { "ToolName": { "whitelist": {"<userid>": true, ...}, "gamePassId": <int or absent> } }
+
+def load_spawners():
+    if not os.path.exists(SPAWNERS_FILE):
+        return {}
+    with open(SPAWNERS_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_spawners(data):
+    with open(SPAWNERS_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+
+def apply_spawner(entry):
+    data = load_spawners()
+    tool = entry["tool"]
+    action = entry["action"]
+    cfg = data.setdefault(tool, {"whitelist": {}})
+    cfg.setdefault("whitelist", {})
+
+    if action == "whitelist_add":
+        cfg["whitelist"][str(entry["userid"])] = True
+    elif action == "whitelist_remove":
+        cfg["whitelist"].pop(str(entry["userid"]), None)
+    elif action == "set_gamepass":
+        cfg["gamePassId"] = int(entry["gamepass"])
+    elif action == "remove_gamepass":
+        cfg.pop("gamePassId", None)
+    elif action == "clear":
+        data.pop(tool, None)
+
+    save_spawners(data)
+
+
+@app.route("/getspawners", methods=["GET"])
+def getspawners():
+    if request.args.get("secret") != SECRET:
+        return jsonify({"error": "unauthorized"}), 401
+    return jsonify(load_spawners())
+
+
+@app.route("/pushspawner", methods=["POST"])
+def pushspawner():
+    if request.headers.get("x-secret") != SECRET:
+        return jsonify({"error": "unauthorized"}), 401
+    apply_spawner(request.json)
+    return jsonify({"ok": True})
 
 
 @app.route("/push", methods=["POST"])
